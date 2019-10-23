@@ -15,7 +15,7 @@ package cn.wanru.im.protocol.base;
  * 协议的定义是向后兼容的，新加的字段不会影响老协议的解析
  * 字段的规定：
  * 1. 数组类型的字段长度最大为Short.MAX_VALUE
- * 2. String类型字段长度最大为Integer.MAX_VALUE
+ * 2. String类型字段长度最大为Short.MAX_VALUE
  * 3. 集合类型的value不能为null，map类型的key,value不能为null，size最大值为Short.MAX_VALUE
  * 4. 集合类型的value必须是基本类型(包括string)或Protocol类型,
  * map类型的key,value必须是基本类型(包括string)获Protocol类型

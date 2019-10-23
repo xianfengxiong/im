@@ -35,17 +35,23 @@ public class BaseProtocol implements Protocol {
         }
     }
 
+    private void resetBuf() {
+        buf.setIndex(0, HEAD_LEN);
+    }
+
     @Override
     public byte[] serialize() {
         checkInited();
         len = buf.writerIndex() - buf.readerIndex();
-        buf.setInt(0, len);
         buf.setShort(0, len);
         buf.setInt(2, uri);
         buf.setShort(6, channel);
         byte[] ret = new byte[len];
         buf.readerIndex(0);
         buf.readBytes(ret);
+
+        resetBuf();
+
         return ret;
     }
 
@@ -132,17 +138,18 @@ public class BaseProtocol implements Protocol {
     public void writeString(String value) {
         checkInited();
         if (value == null) {
-            buf.writeInt(HAS_NO_LENGTH);
+            writeArrayLength(HAS_NO_LENGTH);
         } else {
             byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
             int len = bytes.length;
-            buf.writeInt(len);
+            assert len <= Short.MAX_VALUE;
+            writeArrayLength(len);
             buf.writeBytes(bytes);
         }
     }
 
     public String readString() {
-        int len = buf.isReadable(4) ? buf.readInt() : HAS_NO_LENGTH;
+        short len = readArrayLength();
         if (len < 0) {
             return null;
         }

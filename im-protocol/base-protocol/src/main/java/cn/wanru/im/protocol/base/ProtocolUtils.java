@@ -9,6 +9,11 @@ public abstract class ProtocolUtils {
     private static final int URI_OFFSET = Protocol.FILED_LEN;
     private static final int CHANNEL_OFFSET = Protocol.FILED_LEN + Protocol.FIELD_URI;
 
+    public static short getLen(byte[] bytes) {
+        assert bytes.length >= Protocol.HEAD_LEN;
+        return (short) (bytes[0] << 8 | bytes[1] & 0xFF);
+    }
+
     public static int getUri(byte[] bytes) {
         assert bytes.length >= Protocol.HEAD_LEN;
         return (bytes[URI_OFFSET] & 0xFF) << 24
